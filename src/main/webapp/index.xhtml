@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Stoc total</title>
+        <h:outputStylesheet library="css" name="alex.css"/>
+    </h:head>
+    <h:body>
+        <f:view>
+            <c:set var="utilizator" value="#{session.getAttribute('utilizator')}" />
+            <p:layout style="width:auto;height:950px; overflow: auto;" id="layout" >
+                <p:layoutUnit position="north" resizable="false" style="width: auto;" >
+                    <h:outputText value="Farmacia Alissa, punct de lucru #{utilizator.getLocatie()}" 
+                                  rendered="#{fn:toLowerCase(utilizator.getLocatie()) != 'god_mode'}" />
+                    <h:outputText value="Farmacia Alissa, interfata de administrare" 
+                                  rendered="#{fn:toLowerCase(utilizator.getLocatie()) eq 'god_mode'}" />
+                </p:layoutUnit>
+                <p:layoutUnit position="west" resizable="false" size="410">
+                    <p:panel header="Autentificare">
+                        <p:outputLabel value="Utilizator: #{utilizator.getNumeUtilizator()}" /><br />
+                        <p:outputLabel value="Locatie: #{fn:toLowerCase(utilizator.getLocatie()) eq 'god_mode' ? 'toate' : utilizator.getLocatie()}" /><br />
+                        <p:outputLabel value="Rol: Administrator" rendered="#{fn:toLowerCase(utilizator.getLocatie()) eq 'god_mode'}" />
+                        <f:facet name="footer">
+                            <h:form id="form1">
+                                <p:commandButton value="Log out" actionListener="#{login.logout()}" />
+                            </h:form>
+                        </f:facet>
+                    </p:panel>
+                    <p:panel header="Filtre" >
+                        <h:form id="form2">
+                            <h:panelGrid columns="2" cellpadding="5">  
+                                <p:outputLabel value="Locatie" for="inputLocatie" rendered="#{fn:toLowerCase(utilizator.getLocatie()) eq 'god_mode'}" />
+                                <p:inputText value="#{page.inputLocatie}" id="inputLocatie" rendered="#{fn:toLowerCase(utilizator.getLocatie()) eq 'god_mode'}"/>
+                                
+                                <p:outputLabel value="Cod" for="inputCod" />
+                                <p:inputText value="#{page.inputCod}" id="inputCod"  />
+
+                                <p:outputLabel value="Nume" for="inputNume" />
+                                <p:inputText value="#{page.inputNume}" id="inputNume" />
+
+                                <p:outputLabel value="Producator" for="inputProducator" />
+                                <p:inputText value="#{page.inputProducator}" id="inputProducator" />
+                                <p:outputLabel value="Scanate" for="checkbox" />
+                                <p:selectBooleanCheckbox label="Scanate" value="#{page.selectat}" id="checkbox" />
+                            </h:panelGrid>
+
+                            <p:commandButton value="Apply" actionListener="#{page.manageApplyButton()}" update=":form4"  />
+
+                        </h:form>
+
+                    </p:panel>
+                    <p:panel header="Produs" >
+                        <h:form id="form3">
+                            <h:panelGrid columns="2" cellpadding="5"> 
+                                <p:outputLabel value="Cod" />
+                                <p:inputText readonly="true" value="#{page.outputCod}" disabled="true" id="outputCod" />
+
+                                <p:outputLabel value="Nume" for="outputNume" />
+                                <p:inputText readonly="true" disabled="true" value="#{page.outputNume}" id="outputNume" />
+
+                                <p:outputLabel value="Cantitate flacon" for="outputCantFlacon" />
+                                <p:inputText value="#{page.outputCantFlacon}" id="outputCantFlacon" readonly="true" disabled="true"/>
+
+                                <p:outputLabel value="Producator" for="outputProducator" />
+                                <p:inputText value="#{page.outputProducator}" id="outputProducator" readonly="true" disabled="true"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:panel>
+                </p:layoutUnit>
+                <p:layoutUnit position="center" size="700" resizable="true">
+                    <h:form id="form4">
+                        <p:dataTable var="stoc" value="#{page.lazyStocModel}" paginator="true" rows="25" widgetVar="stocTableWdg" 
+                                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+                                     rowsPerPageTemplate="5,10,15,20,25,30,35,40" selectionMode="single" selection="#{page.selectedRow}" id="stocTable" lazy="true"
+                                     currentPageReportTemplate="{startRecord} - {endRecord} din {totalRecords}">  
+
+                            <p:ajax event="rowSelect" listener="#{page.onRowSelect}" update=":form3" />  
+                            <p:column headerText="Cod Bare" >
+                                <h:outputText value="#{stoc.codBare}" />
+                            </p:column>
+                            <p:column headerText="Cod" >
+                                <h:outputText value="#{stoc.cod}" />
+                            </p:column>
+                            <p:column headerText="Nume" >
+                                <h:outputText value="#{stoc.nume}" />
+                            </p:column>
+                            <p:column headerText="Cantitate Flacon" >
+                                <h:outputText value="#{stoc.cantFlacon}" />
+                            </p:column>
+                            <p:column headerText="Producator" >
+                                <h:outputText value="#{stoc.producator}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </p:layoutUnit>
+            </p:layout>
+        </f:view>
+    </h:body>
+</html>

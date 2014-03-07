@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+
+        <title>Autentificare</title>
+        <h:outputStylesheet library="css" name="style.css"/>
+        <h:outputScript name="jquery.js" library="js" target="head" /> 
+        <h:outputScript name="script.js" library="js" target="head" />
+    </h:head>
+    <h:body>
+
+        <div class="container" style="margin-top: 10%;">
+            <section id="content">
+                <h:form>
+                    <h1>Salut!</h1>
+                    <div>
+                        <!--                            <h:outputLabel for="username" value="Enter Username: " />-->
+                        <!--<p:messages autoUpdate="true" />-->
+                        <!--<h:messages showSummary="true" />-->
+                        <p:inputText placeholder="Username" id="username" value="#{login.username}" label="Username">
+                            <!--<f:validateLength minimum="5" maximum="30" />-->
+                            <!--                                    <f:validateRegex for="username" pattern="[a-zA-Z0-9_]" />-->
+<!--                            <o:validator validatorId="javax.faces.Required" message="{0} este obligatoriu de completat" for="username" />
+                            <o:validator validatorId="javax.faces.Length" minimum="5" message="{0} trebuie sa contina minim 5 caractere" for="username" />
+                            <o:validator validatorId="javax.faces.Length" maximum="30" message="{0} trebuie sa contina maxim 30 caractere" for="username" />-->
+                            <!--<o:validator validatorId="javax.faces.RegularExpression" pattern="[a-zA-Z0-9_]" message="{0} trebuie sa contina doar caractere alfanumerice" for="username"/>-->
+                        </p:inputText>
+                        
+                        <!--				<input type="text" placeholder="Username" required="" id="username" />-->
+                    </div>
+                    <div>
+                        <h:message for="username" id="errorUser" style="margin: 0em 0em 3em; color: red;" />
+                    </div>
+                    <div>
+                        <!--                            <h:outputLabel for="password" value="Enter Password: " />-->
+
+                        <p:password id="password" placeholder="Password" value="#{login.password}" validatorMessage="Parola trebuie sa contina intre 8 si 30 de caractere" requiredMessage="{0} nu poate fi gol">
+                            <f:validateRequired for="password" />
+                            <f:validateLength minimum="4" maximum="30" />
+                            <!--<f:validateRegex for="password" pattern="[a-zA-Z0-9]"/>-->
+                        </p:password>
+                        <h:message for="password" />
+
+
+                        <!--				<input type="password" placeholder="Password" required="" id="password" />-->
+                    </div>
+                    <div>
+                        <!--<p:commandButton value="Login" " validateClient="true" update="@form"/>-->
+                        <h:commandButton value="Login" actionListener="#{login.redirect()}" >
+                            <f:ajax execute="@form" render="@form" onevent="fadeoutUser()" />
+                        </h:commandButton>
+
+                        
+                    </div>
+                    <p:dialog id="loginFailed" widgetVar="loginFailedWidget" closable="true" closeOnEscape="true" header="Autentificare esuata">
+                        <p:outputLabel value="Ati introdus gresit utilizatorul sau parola, va rugam sa incercati din nou" />
+                        <f:facet name="footer">
+                            <p:commandButton value="OK" oncomplete="loginFailedWidget.hide()" />
+                        </f:facet>
+                    </p:dialog>
+                </h:form> 
+            </section><!-- content -->
+        </div><!-- container -->
+    </h:body>
+</html>
